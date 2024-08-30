@@ -93,11 +93,11 @@ spec:
             - containerPort: 8080
           resources:
             limits:
-              cpu: "0.2"
-              memory: "250Mi"
+              cpu: "1"
+              memory: "500Mi"
             requests:  
-              cpu: "0.2"
-              memory: "250Mi"
+              cpu: "1"
+              memory: "500Mi"
           env:
           - name: REDIS_HOST
             valueFrom:
