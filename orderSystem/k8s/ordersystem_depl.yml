@@ -69,7 +69,7 @@
 #             valueFrom:
 #               secretKeyRef:
 #                 key: AWS_SECRET_KEY
-#                 name: hannah-app-secrets
+#                 name: hannah-app-secrets##
 
 apiVersion: apps/v1
 kind: Deployment
