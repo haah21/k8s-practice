@@ -1,4 +1,4 @@
-#docker 빌드 후 ecr 업로드 및 kuectl apply
+#docker 빌드 후 ecr 업로드 및 kuectl apply!!
 
 name: deploy ordersystem with k8s
 on:
