@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: hannah
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: my-nginx
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: nginx-service
+  namespace: hannah 
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector:
+    app: my-nginx
+
+---
+
+# 쿠버네티스에서 https인증서 적용 절차
+# 1.cert-manager 생성 (local 환경에서 하는 작염)
+  # 1-1. cert-manger 생성을 위한 cert-manager namespace 생성 : kubectl create namespage cert-manager
+  # 1-2. helm 패키지 매니저 설치 : 구글 검색후 다운로드 후 로컬에 설치
+  # 1-3. helm repository 추가 : helm repo add jetstack https://charts.jetstack.io
+  # 1-4. helm repository update : helm repo update
+  # 1-5. heml을 통해 cert-manager 설치 : helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.5.0 --set installCRDs=true
+  # helm install cert-manager jetstack/cert-manager --namespace (위에서 만든 namespace에 설치) --version v1.5.0 --set installCRDs=true
+
+# 2.CluserIssuer 생성 (개별로 생성)
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  namespace: hannah
+spec:
+  acme:
+  # 인증서 서버 주소. 해당 서버의 리소스를 통해 인증서 발행
+    server: https://acme-v02.api.letencrypt.org/directory
+    # 실무에서는 회사계정 넣어야함
+    email: teenkiri@naver.com 
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+
+---
+
+# 3.Certificate 생성
+
+apiVersion: cert-manager.io/v1
+# 쿠버네티스 자원(Kind)
+kind: Certificate
+metadata:
+  name: dabok-com-tls
+  namespace: hannah
+spec:
+  secretName: dabok-com-tls
+  #실무에서는 보통 1년 단위로 씀
+  duration: 2160h #90일
+  renewBefore: 360h #15일 전에 갱신
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: server.dabok.store
+  dnsNames:
+  - server.dabok.store
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-nginx-ingress
+  namespace: hannah
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    # 앞의 prefix 제거
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  tls:
+  - hosts:
+    - "server.dabok.store"
+    secretName: dabok-com-tls
+  rules:
+  - host: server.dabok.store
+    http:
+      paths:
+      - path: /product-service
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service
+            port:
+              number: 80
+      - path: /order-service
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service
+            port:
+              number: 80
