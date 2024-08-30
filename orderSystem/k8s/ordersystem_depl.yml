@@ -50,6 +50,11 @@ spec:
               secretKeyRef:
                 key: DB_PASSWORD
                 name: hannah-app-secrets
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: JWT_SECRET
+                name: hannah-app-secrets
           - name: JWT_SECRET_RT
             valueFrom:
               secretKeyRef:
