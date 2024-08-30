@@ -1,0 +1,37 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  namespace: hannah
+spec:
+  acme:
+  # 인증서 서버 주소. 해당 서버의 리소스를 통해 인증서 발행
+    server: https://acme-v02.api.letencrypt.org/directory
+    # 실무에서는 회사계정 넣어야함
+    email: teenkiri@naver.com 
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+
+---
+
+apiVersion: cert-manager.io/v1
+# 쿠버네티스 자원(Kind)
+kind: Certificate
+metadata:
+  name: dabok-com-tls
+  namespace: hannah
+spec:
+  secretName: dabok-com-tls
+  #실무에서는 보통 1년 단위로 씀
+  duration: 2160h #90일
+  renewBefore: 360h #15일 전에 갱신
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: server.dabok.store
+  dnsNames:
+  - server.dabok.store
