@@ -38,5 +38,5 @@ jobs:
           REPOSITORY: hannah-ordersystem
         run: |
           docker build -t $REGISTRY/$REPOSITORY:latest \
-           -f ./ordersystem/Dockerfile ./ordersystem
+           -f ./orderSystem/Dockerfile ./ordersystem
            docker push $REGISTRY/$REPOSITORY:latest
