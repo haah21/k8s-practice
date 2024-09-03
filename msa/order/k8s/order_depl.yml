@@ -14,7 +14,7 @@ spec:
         app: order
     spec:
       containers:
-        - name: ordersystem
+        - name: order
         # aws의 ecr주소 사용
           image: 346903264902.dkr.ecr.ap-northeast-2.amazonaws.com/hannah-order:latest
           ports:
