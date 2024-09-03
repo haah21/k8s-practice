@@ -45,7 +45,7 @@ jobs:
 
       - name: eks kubectl apply
         run: |
-          kubectl apply -f ./member/member/k8s/member_depl.yml
+          kubectl apply -f ./msa/member/k8s/member_depl.yml
           kubectl rollout restart deployment member-deployment -n hannah
         
       # msa order배포
