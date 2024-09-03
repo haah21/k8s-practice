@@ -103,39 +103,39 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: REDIS_HOST
-                name: hannah-app-secret
+                name: hannah-app-secrets
           - name: DB_HOST
             valueFrom:
               secretKeyRef:
                 key: DB_HOST
-                name: hannah-app-secret
+                name: hannah-app-secrets
           - name: DB_USERNAME
             valueFrom:
               secretKeyRef:
                 key: DB_USERNAME
-                name: hannah-app-secret
+                name: hannah-app-secrets
           - name: DB_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: DB_PASSWORD
-                name: hannah-app-secret
+                name: hannah-app-secrets
           - name: JWT_SECRET
             valueFrom:
               secretKeyRef:
                 key: JWT_SECRET
-                name: hannah-app-secret
+                name: hannah-app-secrets
           - name: JWT_SECRET_RT
             valueFrom:
               secretKeyRef:
                 key: JWT_SECRET_RT
-                name: hannah-app-secret
+                name: hannah-app-secrets
           - name: AWS_ACCESS_KEY
             valueFrom:
               secretKeyRef:
                 key: AWS_ACCESS_KEY
-                name: hannah-app-secret
+                name: hannah-app-secrets
           - name: AWS_SECRET_KEY
             valueFrom:
               secretKeyRef:
                 key: AWS_SECRET_KEY
-                name: hannah-app-secret
+                name: hannah-app-secrets
